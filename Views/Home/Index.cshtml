@@ -1,0 +1,138 @@
+﻿@model IEnumerable<onlineShop.ViewModel.ProductViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<script type="text/javascript">
+    function AddToCart(item) {
+        var itemId = $(item).attr("itemid");
+        var formData = new FormData();
+        formData.append("ItemId", itemId);
+        $.ajax({
+            async: true,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            url: '/Home/Index',
+            success: function (data) {
+                if (data.Success) {
+                    $("#cartItem").text(" " + data.Counter + " ");
+                     debugger;
+                }
+            },
+            error: function (err) {
+                alert("There is some problem." +err.toString());
+            }
+        });
+         window.location.reload();
+    }
+</script>
+<style type="text/css">
+    .jumbotron{
+        background-image: url("https://th.bing.com/th/id/OIP.KnuEo7MhUFlJl0YG1qc46QHaE8?pid=ImgDet&rs=1");
+        background-size:cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: relative;
+        color:black;
+    }
+    .card-style{
+        width:250px;
+        height:360px;
+        margin-bottom:5px;
+        background-color:white;
+        border-radius:5px;
+        box-shadow:5px 5px 3px whitesmoke;
+    }
+    .pictures{
+        background-repeat:round;
+        padding-bottom:14px;
+        background-attachment:fixed;
+        margin-bottom:5px;
+        margin-top:3px;
+        background-color:white
+    }
+    .grid-container{
+    display: grid;
+    row-gap: 5px;
+    grid-template-columns: auto auto auto auto;
+    background-color: whitesmoke;
+    padding: 10px;
+    }
+    .grid-item{
+     background-color: rgba(255, 255, 255, 0.8);
+     border: 1px solid rgba(0, 0, 0, 0.8);
+     padding: 2px;
+     font-size: 25px;
+     text-align: center;
+    }
+    .labe-layoutl{
+        height:50px;
+        width:250px;
+        padding-left:5px;
+        border-top:2px solid #468189ff;
+        padding-top:0px;
+    }
+    .btn-layout{
+        border-top:2px solid #468189ff;
+        padding-top:10px;
+    }
+    .btn-add-to-cart{
+        float:left;
+        background-color:#468189ff;
+
+    }
+    .btn-add-to-wish-list{
+        float:right;
+        background-color:#468189ff;
+    }
+</style>
+<div class="">
+    <div class="jumbotron">
+        <h1 class="display-4"> Cuppa Coffee</h1>
+        <p class="lead">Get your favourite beverages here..</p>
+        <hr class="my-4">
+        <p class="lead">Our meals are always fresh.</p>
+    </div>
+</div>
+
+<div class="container">
+<div class="row">
+    <div class="col-md-4">
+        <p style="font-size:22px">Featured Products</p>
+    </div>
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+        {
+            @Html.TextBox("searchValue", null,new {@style="height:40px;margin-left:5px;font-size:18px;color:black;border-radius:5px"})
+            <button type="submit" name="searchValue"><i class="fa fa-search" aria-hidden="true"></i></button> 
+        }
+    </div>
+</div>
+
+<hr />
+<br />
+<div class="grid-container">
+    @foreach(var product in Model){
+        <div class="card card-style grid-item">
+            <div class="card-body">
+          
+                <div class="pictures">
+                    <img src="Images/@product.Image" alt="@product.Image" height="180" width="180" />
+                </div>
+                <div class="label-layout">
+                    <h5>@product.Name</h5>
+                </div>
+
+                <div class="label-layout">
+                    <h5>@product.SellingPrice.ToString("R#,##0.00")</h5>
+                </div>
+                <div class="btn-layout">
+                    <button type="submit" class="btn btn-success" style="color: white" itemid="@product.ProductId" onclick="AddToCart(this)">Pay Now</button>
+                </div>
+            
+            </div>
+        </div>
+    }
+</div>
+</div>

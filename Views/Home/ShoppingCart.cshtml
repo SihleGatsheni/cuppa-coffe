@@ -1,0 +1,78 @@
+﻿@model IEnumerable<onlineShop.ViewModel.CartViewModel>
+@{
+    ViewBag.Title = "ShoppingCart";
+    decimal TotalAmount = 0.00M;
+    List<string> theaders = new List<string> { "ItemName", "Quantity", "SubPrice" };
+}
+
+
+
+
+
+<hr  style="margin-left:200px; margin-right:200px"/>
+@using (Html.BeginForm("CheckOut", "Home", FormMethod.Get))
+{
+    <div style="margin-left: 250px; margin-right:250px;margin-top: 50px">
+        <table class="table-condensed" style="width: 100%">
+
+            @{
+                if (Model == null || Model.Count() <= 0)
+                {
+                        <div style="font-size: 250px; margin-left:400px;margin-top: -20px; color: #E1EAE9">
+                            <i class="far fa-dizzy"></i>
+                            <h2 style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top:-50px; margin-left: 50px">
+                                Cart Empty
+                            </h2>
+                        </div>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        TotalAmount += item.Total;
+                        <tr class="cart-card">
+                            <td>
+                                 <img  class="cart-thumbnail" src=@Url.Content("/Images/"+item.ImageUrl) alt="@item.ImageUrl"/>
+                            </td>
+                            <td>
+                                @item.ItemName
+                            </td>
+                            <td >
+                                <a href="@Url.Action("Minus","Home",new { id = (string)item.ItemId})">
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                </a>
+                                @item.Quantity.ToString("#,##0")
+                                <a href="@Url.Action("Plus","Home",new { id = (string)item.ItemId})">
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                            <td >
+                                @item.Total.ToString("R#,##0.00")
+                            </td>
+                            <td class="remove-cart-item">
+                                <a href="@Url.Action("Remove","Home",new { id = (string)item.ItemId})"><i class="far fa-trash-alt fa-3x" style="color: #468189ff; font-size:25px"  onclick="return confirm('Are you sure you want to remove this item?')"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+
+          @* Need to add a check *@
+                <tr style="border-top: 2px solid #468189ff">
+                    <td colspan="3" style="text-align: right">
+                        <h3>Total Amount</h3>
+                    </td>
+                    <td style="text-align: right">
+                        <h3>@TotalAmount.ToString("R#,##0.00")</h3>
+                    </td>
+                </tr>
+                <tr style="text-align: right">
+                    <td colspan="5">
+                        <input type="submit" value="CheckOut" name="CheckOut" class="btn btn-primary" id="SaveOrder" style="background-color:#468189ff; width: 120px " />
+                    </td>
+                </tr>
+        
+        </table>
+    </div>
+}
+

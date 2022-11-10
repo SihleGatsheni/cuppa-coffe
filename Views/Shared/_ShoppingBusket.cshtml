@@ -1,0 +1,16 @@
+﻿@using onlineShop.Extensions
+@inject UserManager<IdentityUser> userManager;
+@{
+	var userId = userManager.GetUserId(Context.User);
+}
+<ul class="nav navbar-nav navbar-right">
+	<li>
+		@if(Context.Session.Get<int>($"CartCounter-{userId}") != null)
+		{
+			<i  style="font-size: 22px" class="fas fa-shopping-cart">@Html.ActionLink(Context.Session.Get<int>($"CartCounter-{userId}").ToString(), "ShoppingCart", "Home", new { id = "cartItem" },new {style="font-size:22px"})</i>
+		}else
+		{
+			<i class="fas fa-shopping-cart">@Html.ActionLink("(0)", "ShoppingCart", "Home", new { id = "cartItem" })</i>
+		}
+	</li>
+</ul>

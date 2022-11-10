@@ -1,0 +1,97 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model NdlovuCode.PaginatedList.PaginatedList<Sale>
+@{
+    ViewData["Title"] = "Orders";
+}
+
+
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Online Orders</h1>
+            <div class="" style="margin-right: 20px;margin-top:40px " id="admin-menu-id">
+                <table d="myTable" class="table table-bordered table-hover table-sm" style="margin: 10px">
+                    <thead style=" background: #E3BC9A;">
+                    <tr>
+                        <th>
+                            OrderId
+                        </th>
+                        <th>
+                            Order Date
+                        </th>
+                        <th>
+                            Order Total
+                        </th>
+                        <th>
+                            Order Status
+                        </th>
+                        <th>
+                            <ul class="pagination justify-content-start" style="margin-top: 10px">
+                                <li class="page-item">
+                                    <a style="width: 70px;margin-left: 5px;padding-top: 5px" class="page-link" value="sort" asp-action="Index" asp-route-sort="@(true)">Asc</a>
+                                </li>
+                                <li>
+                                    <a style="width: 70px;margin-left: 2px;padding-top: 5px" class="page-link" value="shuffle" asp-action="Index" asp-route-reverse="@(true)">Des</a>
+                                </li>
+                                <li>
+                                    <a style="width: 70px;margin-left: 2px;padding-top: 5px" class="page-link" value="shuffle" asp-action="Index" asp-route-shuffle="@(true)">Shuffle</a>
+                                </li>
+                            </ul>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SaleId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                              R @Html.DisplayFor(modelItem => item.TotalAmount)
+                            </td>
+                            <td>
+                                <a class="link-hover" asp-action="" asp-route-id="@item.SaleId">Process Order</a> |
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div class="" style="margin: auto">
+                    @if (Model.TotalPages > 0)
+                    {
+                        <ul class="pagination justify-content-start" style="margin-top: 10px">
+                            @if (Model.PageIndex > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="Admin" asp-action="Index" asp-route-pageNumber="1">First</a>
+                                </li>
+                                <li>
+                                    <a class="page-link" asp-controller="Admin" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
+                                </li>
+                            }
+                            @for (var pge = Model.PageIndex; pge <= Model.Count; pge++)
+                            {
+                                <li class="page-item @(pge == Model.PageIndex ? "active" : "")">
+                                    <a class="page-link" asp-controller="Admin" asp-action="Index" asp-route-pageNumber="@pge">@pge</a>
+                                </li>
+                            }
+                            @if (Model.PageIndex < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="Admin" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
+                                </li>
+                                <li>
+                                    <a class="page-link" asp-controller="Admin" asp-action="Index" asp-route-pageNumber="@(Model.TotalPages)">Last</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
